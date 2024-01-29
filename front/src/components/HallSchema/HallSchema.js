@@ -37,7 +37,6 @@ function HallSchema({ svgData }) {
     });
   };
 
-
   const handleIncrease = () => {
     setScale((prevScale) => (prevScale < 2.0 ? prevScale + 0.1 : prevScale));
   };
@@ -54,6 +53,14 @@ function HallSchema({ svgData }) {
         style={{ transform: `scale(${scale})` }}
         dangerouslySetInnerHTML={{ __html: svgData }}
       />
+      <div className={style.selectedSeatsContainer}>
+        {selectedSeats.map((id) => (
+          <div
+            key={id}
+            className={style.selectedSeat}
+          />
+        ))}
+      </div>
       <div className={style.buttons}>
         <button onClick={handleIncrease}>+</button>
         <button onClick={handleDecrease}>-</button>
