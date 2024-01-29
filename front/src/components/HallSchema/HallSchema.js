@@ -7,10 +7,10 @@ function HallSchema({ svgData }) {
 
   useEffect(() => {
     const handleSeatClick = (e) => {
-      const clickedSeatId = e.target.getAttribute('data-seat-id');
-      console.log(clickedSeatId);
+      const clickedSeatId = e.target.getAttribute('id');
+      console.log("clickedSeatId",clickedSeatId);
       if (clickedSeatId) {
-        toggleSeat(clickedSeatId);
+        toggleSeatColor(clickedSeatId);
       }
     };
 
@@ -26,6 +26,13 @@ function HallSchema({ svgData }) {
       }
     };
   }, [selectedSeats]);
+
+  const toggleSeatColor = (id) => {
+    const clickedRect = document.getElementById(id);
+    if (clickedRect) {
+      clickedRect.setAttribute('stroke', 'red');
+    }
+  };
 
   const toggleSeat = (id) => {
     setSelectedSeats((prevSelectedSeats) => {
@@ -54,6 +61,7 @@ function HallSchema({ svgData }) {
         dangerouslySetInnerHTML={{ __html: svgData }}
       />
       <div className={style.selectedSeatsContainer}>
+        {console.log(selectedSeats)}
         {selectedSeats.map((id) => (
           <div
             key={id}
