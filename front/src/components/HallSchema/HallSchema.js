@@ -24,6 +24,7 @@ function HallSchema({ svgData }) {
           showSeatNumber(seatNumber, e.clientX, e.clientY);
         }
 
+        
         setSelectedSeats(updatedSelectedSeats);
         toggleSeatColor(clickedSeatId);
       }
