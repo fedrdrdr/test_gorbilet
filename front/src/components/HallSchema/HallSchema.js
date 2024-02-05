@@ -9,50 +9,31 @@ function HallSchema({ svgData }) {
   useEffect(() => {
     const handleSeatClick = (e) => {
       const rectElement = e.target.closest('rect');
-
+    
       if (rectElement) {
         const clickedSeatId = rectElement.getAttribute('id');
-        // const seatNumber = rectElement.getAttribute('seat');
+        const textElement = document.getElementById(`text-${clickedSeatId}`);
+    
+        if (textElement) {
+          const currentDisplay = textElement.style.display;
+    
+          if (currentDisplay === 'none') {
+            textElement.style.display = 'block';
+            rectElement.setAttribute('class', style.activeRect);
+            rectElement.setAttribute('transform', 'translate(-2, -2)'); 
+          } else {
+            textElement.style.display = 'none';
+            rectElement.removeAttribute('class', style.activeRect);
+            rectElement.removeAttribute('transform');
+          }
+        }
+    
         const updatedSelectedSeats = [...selectedSeats];
-
-        // if (updatedSelectedSeats.includes(clickedSeatId)) {
-        //   removeSeatNumber(seatNumber);
-        //   const index = updatedSelectedSeats.indexOf(clickedSeatId);
-        //   updatedSelectedSeats.splice(index, 1);
-        // } else {
-        //   updatedSelectedSeats.push(clickedSeatId);
-        //   showSeatNumber(seatNumber, e.clientX, e.clientY);
-        // }
-
-
         setSelectedSeats(updatedSelectedSeats);
-        toggleSeatColor(clickedSeatId);
+        // toggleSeatColor(clickedSeatId);
       }
     };
 
-    // const showSeatNumber = (seatNumber, x, y) => {
-    //   const existingElement = document.querySelector(`${style.seatNumber}`);
-    //   if (existingElement) {
-    //     existingElement.style.display = 'none';
-    //   }
-
-    //   const seatNumberElement = document.createElement('div');
-    //   seatNumberElement.className = style.seatNumber;
-    //   seatNumberElement.textContent = seatNumber;
-    //   seatNumberElement.style.left = `${x - 6}px`;
-    //   seatNumberElement.style.top = `${y - 6}px`;
-    //   seatNumberElement.addEventListener('click', handleSeatClick);
-    //   document.body.appendChild(seatNumberElement);
-    // };
-
-    // const removeSeatNumber = (seatNumber) => {
-    //   const seatNumberElements = document.querySelectorAll(`.${style.seatNumber}`);
-    //   seatNumberElements.forEach((element) => {
-    //     if (element.textContent === seatNumber) {
-    //       element.style.display = 'none'; 
-    //     }
-    //   });
-    // };
 
     const schemaContainer = document.getElementById('schema-container');
 
@@ -75,36 +56,31 @@ function HallSchema({ svgData }) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml');
     const rects = xmlDoc.querySelectorAll('rect');
-
+    
 
     rects.forEach((rect) => {
+      rect.setAttribute('class', style.rect);
+    
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.textContent = rect.getAttribute('seat'); // Пример, предполагается, что 'seat' - это атрибут места в <rect>
-      text.setAttribute('x', rect.getAttribute('x')); // Устанавливаем атрибуты text, например, x, y, font-size и т. д.
-      text.setAttribute('y', rect.getAttribute('y') - 6); // Пример, уменьшаем y на 6 единиц, чтобы text был выше rect
+      const textId = `text-${rect.getAttribute('id')}`;
+      text.setAttribute('id', textId);
+      text.textContent = rect.getAttribute('seat');
+      text.setAttribute('x', parseInt(rect.getAttribute('x'), 10) );
+      text.setAttribute('y', parseInt(rect.getAttribute('y'), 10) + 14);
+      text.setAttribute('class', style.text);
+      text.style.display = 'none'; // Устанавливаем изначально в display: none
+    
       const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       rect.parentNode.insertBefore(group, rect);
       group.appendChild(rect);
       group.appendChild(text);
     });
+    
 
     return new XMLSerializer().serializeToString(xmlDoc);
   };
 
   const wrappedSvgData = wrapRectsWithGroup(svgData);
-  const toggleSeatColor = (id) => {
-    const clickedRect = document.getElementById(id);
-
-    if (clickedRect) {
-      const currentStroke = clickedRect.getAttribute('stroke');
-
-      if (currentStroke) {
-        clickedRect.removeAttribute('stroke');
-      } else {
-        clickedRect.setAttribute('stroke', 'rgb(158, 88, 225)');
-      }
-    }
-  };
 
   const handleIncrease = () => {
     setScale((prevScale) => (prevScale < 2.0 ? prevScale + 0.1 : prevScale));

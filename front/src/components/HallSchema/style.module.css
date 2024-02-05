@@ -21,8 +21,24 @@
   padding: 10px;
   font-size: 28px;
 }
-.seatNumber {
-  position: absolute;
+.text {
   pointer-events: none;
-  z-index: 0;
+}
+.rect {
+  cursor: pointer;
+}
+.rect:hover {
+  fill: #858585;
+  stroke: rgb(81, 81, 81); 
+  stroke-width: 1px;
+
+
+}
+g g .activeRect  {
+  fill: #eaeaea;
+  width:22px;
+  height: 22px;
+  stroke: rgb(75, 75, 75); 
+  stroke-width: 1px;
+  cursor: pointer;
 }
