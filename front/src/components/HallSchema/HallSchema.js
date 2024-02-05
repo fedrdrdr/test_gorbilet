@@ -12,47 +12,47 @@ function HallSchema({ svgData }) {
 
       if (rectElement) {
         const clickedSeatId = rectElement.getAttribute('id');
-        const seatNumber = rectElement.getAttribute('seat');
+        // const seatNumber = rectElement.getAttribute('seat');
         const updatedSelectedSeats = [...selectedSeats];
 
-        if (updatedSelectedSeats.includes(clickedSeatId)) {
-          removeSeatNumber(seatNumber);
-          const index = updatedSelectedSeats.indexOf(clickedSeatId);
-          updatedSelectedSeats.splice(index, 1);
-        } else {
-          updatedSelectedSeats.push(clickedSeatId);
-          showSeatNumber(seatNumber, e.clientX, e.clientY);
-        }
+        // if (updatedSelectedSeats.includes(clickedSeatId)) {
+        //   removeSeatNumber(seatNumber);
+        //   const index = updatedSelectedSeats.indexOf(clickedSeatId);
+        //   updatedSelectedSeats.splice(index, 1);
+        // } else {
+        //   updatedSelectedSeats.push(clickedSeatId);
+        //   showSeatNumber(seatNumber, e.clientX, e.clientY);
+        // }
 
-        
+
         setSelectedSeats(updatedSelectedSeats);
         toggleSeatColor(clickedSeatId);
       }
     };
 
-    const showSeatNumber = (seatNumber, x, y) => {
-      const existingElement = document.querySelector(`${style.seatNumber}`);
-      if (existingElement) {
-        existingElement.style.display = 'none';
-      }
+    // const showSeatNumber = (seatNumber, x, y) => {
+    //   const existingElement = document.querySelector(`${style.seatNumber}`);
+    //   if (existingElement) {
+    //     existingElement.style.display = 'none';
+    //   }
 
-      const seatNumberElement = document.createElement('div');
-      seatNumberElement.className = style.seatNumber;
-      seatNumberElement.textContent = seatNumber;
-      seatNumberElement.style.left = `${x - 6}px`;
-      seatNumberElement.style.top = `${y - 6}px`;
-      seatNumberElement.addEventListener('click', handleSeatClick);
-      document.body.appendChild(seatNumberElement);
-    };
+    //   const seatNumberElement = document.createElement('div');
+    //   seatNumberElement.className = style.seatNumber;
+    //   seatNumberElement.textContent = seatNumber;
+    //   seatNumberElement.style.left = `${x - 6}px`;
+    //   seatNumberElement.style.top = `${y - 6}px`;
+    //   seatNumberElement.addEventListener('click', handleSeatClick);
+    //   document.body.appendChild(seatNumberElement);
+    // };
 
-    const removeSeatNumber = (seatNumber) => {
-      const seatNumberElements = document.querySelectorAll(`.${style.seatNumber}`);
-      seatNumberElements.forEach((element) => {
-        if (element.textContent === seatNumber) {
-          element.style.display = 'none'; 
-        }
-      });
-    };
+    // const removeSeatNumber = (seatNumber) => {
+    //   const seatNumberElements = document.querySelectorAll(`.${style.seatNumber}`);
+    //   seatNumberElements.forEach((element) => {
+    //     if (element.textContent === seatNumber) {
+    //       element.style.display = 'none'; 
+    //     }
+    //   });
+    // };
 
     const schemaContainer = document.getElementById('schema-container');
 
