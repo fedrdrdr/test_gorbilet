@@ -1,4 +1,4 @@
-// App.js
+
 import React, { useState, useEffect } from 'react';
 import { fetchHallData } from '../../api/ApiService';
 import HallSchema from '../HallSchema/HallSchema';

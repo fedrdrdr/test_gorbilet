@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.place {
+cursor: pointer;
+position: relative;
+}
+
+.place:hover {
+  fill: rgb(149, 158, 165);
+}

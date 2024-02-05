@@ -1,13 +1,11 @@
 .wrap {
-display: flex;
-align-items: center;
-justify-content: center;
-padding: 40px;
-position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  position: relative;
 }
-.schema {
-  transform-origin: top left; 
-}
+
 .buttons {
   position: absolute;
   top: 20%;
@@ -19,8 +17,12 @@ position: relative;
 
 .buttons button {
   border-radius: 50%;
-  background: white;
   margin: 5px;
   padding: 10px;
   font-size: 28px;
+}
+.seatNumber {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
 }

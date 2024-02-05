@@ -1,47 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import style from './style.module.css';
 
+
 function HallSchema({ svgData }) {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const handleSeatClick = (e) => {
-      const clickedSeatId = e.target.getAttribute('id');
-      console.log("clickedSeatId",clickedSeatId);
-      if (clickedSeatId) {
+      const rectElement = e.target.closest('rect');
+
+      if (rectElement) {
+        const clickedSeatId = rectElement.getAttribute('id');
+        const seatNumber = rectElement.getAttribute('seat');
+        const updatedSelectedSeats = [...selectedSeats];
+
+        if (updatedSelectedSeats.includes(clickedSeatId)) {
+          removeSeatNumber(seatNumber);
+          const index = updatedSelectedSeats.indexOf(clickedSeatId);
+          updatedSelectedSeats.splice(index, 1);
+        } else {
+          updatedSelectedSeats.push(clickedSeatId);
+          showSeatNumber(seatNumber, e.clientX, e.clientY);
+        }
+
+        setSelectedSeats(updatedSelectedSeats);
         toggleSeatColor(clickedSeatId);
       }
     };
 
+    const showSeatNumber = (seatNumber, x, y) => {
+      const existingElement = document.querySelector(`${style.seatNumber}`);
+      if (existingElement) {
+        existingElement.style.display = 'none';
+      }
+
+      const seatNumberElement = document.createElement('div');
+      seatNumberElement.className = style.seatNumber;
+      seatNumberElement.textContent = seatNumber;
+      seatNumberElement.style.left = `${x - 6}px`;
+      seatNumberElement.style.top = `${y - 6}px`;
+      seatNumberElement.addEventListener('click', handleSeatClick);
+      document.body.appendChild(seatNumberElement);
+    };
+
+    const removeSeatNumber = (seatNumber) => {
+      const seatNumberElements = document.querySelectorAll(`.${style.seatNumber}`);
+      seatNumberElements.forEach((element) => {
+        if (element.textContent === seatNumber) {
+          element.style.display = 'none'; 
+        }
+      });
+    };
+
     const schemaContainer = document.getElementById('schema-container');
 
+    const clickHandler = (e) => {
+      handleSeatClick(e);
+    };
+
     if (schemaContainer) {
-      schemaContainer.addEventListener('click', handleSeatClick);
+      schemaContainer.addEventListener('click', clickHandler);
     }
 
     return () => {
       if (schemaContainer) {
-        schemaContainer.removeEventListener('click', handleSeatClick);
+        schemaContainer.removeEventListener('click', clickHandler);
       }
     };
   }, [selectedSeats]);
+  const wrapRectsWithGroup = (svgString) => {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml');
+    const rects = xmlDoc.querySelectorAll('rect');
 
-  const toggleSeatColor = (id) => {
-    const clickedRect = document.getElementById(id);
-    if (clickedRect) {
-      clickedRect.setAttribute('stroke', 'red');
-    }
+    rects.forEach((rect) => {
+      const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      rect.parentNode.insertBefore(group, rect);
+      group.appendChild(rect);
+    });
+
+    return new XMLSerializer().serializeToString(xmlDoc);
   };
 
-  const toggleSeat = (id) => {
-    setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(id)) {
-        return prevSelectedSeats.filter((seatId) => seatId !== id);
+  const wrappedSvgData = wrapRectsWithGroup(svgData);
+  const toggleSeatColor = (id) => {
+    const clickedRect = document.getElementById(id);
+
+    if (clickedRect) {
+      const currentStroke = clickedRect.getAttribute('stroke');
+
+      if (currentStroke) {
+        clickedRect.removeAttribute('stroke');
       } else {
-        return [...prevSelectedSeats, id];
+        clickedRect.setAttribute('stroke', 'rgb(158, 88, 225)');
       }
-    });
+    }
   };
 
   const handleIncrease = () => {
@@ -54,19 +108,18 @@ function HallSchema({ svgData }) {
 
   return (
     <div className={style.wrap}>
-      <div
-        id="schema-container"
-        className={style.schema}
-        style={{ transform: `scale(${scale})` }}
-        dangerouslySetInnerHTML={{ __html: svgData }}
-      />
+      <div>
+        <div
+          id="schema-container"
+          className={style.schema}
+          style={{ transform: `scale(${scale})` }}
+          dangerouslySetInnerHTML={{ __html: wrappedSvgData }}
+        />
+      </div>
+      
       <div className={style.selectedSeatsContainer}>
-        {console.log(selectedSeats)}
         {selectedSeats.map((id) => (
-          <div
-            key={id}
-            className={style.selectedSeat}
-          />
+          <div key={id} className={style.selectedSeat} />
         ))}
       </div>
       <div className={style.buttons}>
@@ -78,4 +131,3 @@ function HallSchema({ svgData }) {
 }
 
 export default HallSchema;
-
