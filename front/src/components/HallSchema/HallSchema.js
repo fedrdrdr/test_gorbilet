@@ -69,15 +69,22 @@ function HallSchema({ svgData }) {
       }
     };
   }, [selectedSeats]);
+
   const wrapRectsWithGroup = (svgString) => {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml');
     const rects = xmlDoc.querySelectorAll('rect');
 
+
     rects.forEach((rect) => {
+      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.textContent = rect.getAttribute('seat'); // Пример, предполагается, что 'seat' - это атрибут места в <rect>
+      text.setAttribute('x', rect.getAttribute('x')); // Устанавливаем атрибуты text, например, x, y, font-size и т. д.
+      text.setAttribute('y', rect.getAttribute('y') - 6); // Пример, уменьшаем y на 6 единиц, чтобы text был выше rect
       const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       rect.parentNode.insertBefore(group, rect);
       group.appendChild(rect);
+      group.appendChild(text);
     });
 
     return new XMLSerializer().serializeToString(xmlDoc);
