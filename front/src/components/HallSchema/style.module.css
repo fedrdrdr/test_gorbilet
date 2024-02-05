@@ -14,7 +14,9 @@
   display: flex;
   flex-direction: column;
 }
-
+.schema {
+  overflow: scroll;
+}
 .buttons button {
   border-radius: 50%;
   margin: 5px;
@@ -31,8 +33,6 @@
   fill: #858585;
   stroke: rgb(81, 81, 81); 
   stroke-width: 1px;
-
-
 }
 g g .activeRect  {
   fill: #eaeaea;
